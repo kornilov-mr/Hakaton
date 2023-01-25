@@ -1,0 +1,74 @@
+body{
+	--main-color:#fff;
+	--borders:#3181c7;
+	--block-color: aliceblue;
+}
+a{
+	color: #000;
+	text-decoration:none;
+}
+.table{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    row-gap: 20px;
+	column-gap:20px;
+}
+.Nav{    
+	width: 85%;
+    margin: -10px;
+    padding: 10px;
+    left: 7.5%;
+    position: fixed;
+    display: flex;
+    flex-flow: row wrap;
+    row-gap: 5px;
+    column-gap: 5px;
+    background-color: var(--main-color);
+    box-shadow: 1px 1px 5px black;
+    border-radius: 0px 0 10px 10px;
+}
+.Nav div{
+	padding: 10px;
+    background-color: var(--block-color);
+     border: var(--borders) solid 5px; 
+    border-radius: 20px;
+    font-size: 25px;
+    color: black;
+	
+}
+
+.table div{
+    padding: 10px 30px;
+    background-color: var(--block-color);
+     border: var(--borders) solid 5px; 
+    border-radius: 20px;
+    font-size: 50px;
+    color: black;
+	
+}
+div.Main{
+    width: 80%;
+    margin: auto;
+    padding: 100px;
+	
+    padding: 10px;
+    border: aliceblue solid 7px;
+    padding-top: 50px;
+}
+
+p {
+	font-size:30px;
+}
+.cube {
+  animation: 3s infinite reverse slidein;
+} 
+@keyframes slidein {
+  from {
+      rotation: "0 0 0";
+  }
+
+  to {
+      rotation: "0 0 360";
+  }
+}
