@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+   <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+  
+  <body>
+    <script>
+      AFRAME.registerComponent('follow', {
+        schema: {
+
+          target: {
+            type: "array",
+            minItems: 1,
+            maxItems: 2,
+            items: "selector"
+          },
+          speed: { type: 'number' }
+        },
+
+        init: function () {
+          this.flag_target = new Boolean(true);
+          this.targets = [document.getElementById(this.data.target[0]),
+                         document.getElementById(this.data.target[1])]
+          this.to = 0
+        },
+
+        tick: function (time, timeDelta) {            
+          // Grab position vectors (THREE.Vector3) from the entities' three.js objects.
+          // console.log(this.data.target);
+          var targetPosition;
+          var currentPosition = this.el.object3D.position;
+            targetPosition =  new THREE.Vector3( );
+            targetPosition.add(this.targets[0].object3D.position);
+            targetPosition.add(this.targets[0].parentEl.object3D.position);
+            targetPosition2 =  new THREE.Vector3( );
+            targetPosition2.add(this.targets[1].object3D.position);
+            targetPosition2.add(this.targets[1].parentEl.object3D.position);
+        var Inter =  new THREE.Vector3( );
+            Inter.add(targetPosition);
+            Inter.add(targetPosition2);
+            Inter.multiplyScalar(0.5);
+            Inter.y += 5;
+            var t = Math.abs((time*0.001)%2-1);
+            t = Math.min(t,0.98);
+            t = Math.max(t,0.02);
+            console.log(t);
+            targetPosition.multiplyScalar(t*t);
+            Inter.multiplyScalar(t*(1-t));
+            targetPosition2.multiplyScalar((1-t)*(1-t));
+
+          // Translate the entity in the direction towards the target.
+          this.el.setAttribute('position', {
+            x:  targetPosition.x + targetPosition2.x + Inter.x,
+            y:  targetPosition.y + targetPosition2.y + Inter.y,
+            z:  targetPosition.z + targetPosition2.z + Inter.z
+          });
+        }
+      });
+
+    </script>
+    <a-scene embedded
+                ar
+            vr-mode-ui="enabled:false;"
+                arjs="trackingMethod:best; sourceType: webcam"
+                renderer="logarithmicDepthBuffer:true;">     
+      <a-entity>
+      <a-marker type='pattern' url='trackers/pattern-a.patt'>
+        <a-sphere radius="0.5" id="target-box1" color="red" position="0 0 0"></a-sphere>
+      </a-marker> 
+      <a-marker type='pattern' url='trackers/pattern-b.patt'>
+        <a-sphere radius="0.5" id="target-box2" color="yellow" position="0 0 0"></a-sphere>
+     </a-marker>
+          <a-sphere radius="0.5" follow="target: target-box1, target-box2; speed: 1" color="blue" position="0 0.2 0"></a-sphere>
+       <a-entity camera></a-entity> 
+    </a-entity> 
+    </a-scene>
+  </body>
+
+</html>
