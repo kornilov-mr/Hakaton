@@ -6,6 +6,52 @@
         </script>
     </head>
     <body>
+        <script >
+        AFRAME.registerComponent('play-all-model-animations', {
+		  init: function () {
+		    this.model = null;
+		    this.mixer = null;
+
+		    var model = this.el.getObject3D('mesh');
+		    if (model) {
+		      this.load(model);
+		    } else {
+		      this.el.addEventListener('model-loaded', function (e) {
+		        this.load(e.detail.model);
+		      }.bind(this));
+		    }
+		  },
+
+		  load: function (model) {
+		    this.model = model;
+		    this.mixer = new THREE.AnimationMixer(model);
+		    this.model.animations.forEach(animation => {
+		      this.mixer.clipAction(animation, model).play();
+		    });
+		  },
+
+		  tick: function (t, dt) {
+		    if (this.mixer && !isNaN(dt)) {
+		      this.mixer.update(dt / 1000);
+		    }
+		  }
+		});
+	  AFRAME.registerComponent('modify-materials', {
+	    init: function () {
+	      // Wait for model to load.
+	      this.el.addEventListener('model-loaded', () => {
+	        // Grab the mesh / scene.
+	        const obj = this.el.getObject3D('mesh');
+	        // Go over the submeshes and modify materials we want.
+	        obj.traverse(node => {
+	          if (node.name.indexOf('ship') !== -1) {
+	            node.material.color.set('red');
+	          }
+	        });
+	      });
+	    }
+	  });
+        </script>
         <a-scene  embedded
                 ar
                  
@@ -13,10 +59,18 @@
                 arjs="trackingMethod:best; sourceType: webcam"
                 renderer="logarithmicDepthBuffer:true;" visible>
             <a-assets>
-			   <a-asset-item id="parrot" src="model/Masha.glb"></a-asset-item>
+			    <a-asset-item id="Andrey" src="https://cdn.glitch.global/f9aac53a-1294-4ab1-9157-99a5602d768c/Andrey.glb?v=1674628829082"></a-asset-item>
+                <a-asset-item id="Mascha" src="https://cdn.glitch.global/f9aac53a-1294-4ab1-9157-99a5602d768c/Masha.glb?v=1674628801229"></a-asset-item>
+                <a-asset-item id="Maxim" src="https://cdn.glitch.global/f9aac53a-1294-4ab1-9157-99a5602d768c/Max.glb?v=1674628805515"></a-asset-item>
+                <a-asset-item id="Mischa" src="https://cdn.glitch.global/f9aac53a-1294-4ab1-9157-99a5602d768c/Misha.glb?v=1674628812175"></a-asset-item>
+                <a-asset-item id="Vova" src="https://cdn.glitch.global/f9aac53a-1294-4ab1-9157-99a5602d768c/Vova.glb?v=1674628747378"></a-asset-item>
 		    </a-assets>
             <a-marker preset="hiro"> 
-                <a-entity gltf-model="#parrot" position='0 0 0' rotation="0 90 0" scale="2 2 2" play-all-model-animations></a-entity>
+                <a-entity gltf-model="#Mischa" position='1 0 0' rotation="-15 90 0" scale="0.5 0.5 0.5" play-all-model-animations></a-entity>
+                <a-entity gltf-model="#Mascha" position='-1 0 0' rotation="15 90 0" scale="0.5 0.5 0.5" play-all-model-animations></a-entity>
+                <a-entity gltf-model="#Maxim" position='2 0 0' rotation="-30 90 0" scale="0.5 0.5 0.5" play-all-model-animations></a-entity>
+                <a-entity gltf-model="#Andrey" position='-2 0 0' rotation="30 90 0" scale="0.5 0.5 0.5" play-all-model-animations></a-entity>
+                <a-entity gltf-model="#Vova" position='0 0 0' rotation="0 90 0" scale="0.5 0.5 0.5" play-all-model-animations></a-entity>
                 <a-sphere  scale="0.01 0.01 0.01"
                  material='opacity: 1; color:red;'>
                 </a-sphere>
